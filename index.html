@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>श्री दत्तगुरू सेवा मंडळ, धामणपे - वार्षिक वर्गणी</title>
+<style>
+  :root {
+    --saffron: #e65100;
+    --saffron-light: #fff3e0;
+    --gold: #ffb300;
+    --dark: #2c1810;
+    --bg: #fdfaf6;
+    --card-bg: #ffffff;
+    --green: #2e7d32;
+    --red: #c62828;
+    --border: #e0d6cc;
+  }
+  * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body { margin: 0; background: var(--bg); color: var(--dark); padding-bottom: 80px; }
+  
+  header {
+    background: linear-gradient(135deg, #bf360c, #ef6c00);
+    color: white;
+    padding: 16px 14px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header .mantra { font-size: 12px; opacity: 0.95; letter-spacing: 0.5px; }
+  header h1 { margin: 4px 0; font-size: 20px; }
+  header p { margin: 0; font-size: 12px; opacity: 0.9; }
+
+  .status-bar {
+    background: #fff8e1;
+    border-bottom: 1px solid #ffe082;
+    padding: 8px 14px;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .sync-badge { font-weight: 600; color: var(--green); }
+  .sync-badge.loading { color: #ef6c00; }
+  .sync-badge.error { color: var(--red); }
+
+  .btn {
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn-lock { background: #37474f; color: white; }
+  .btn-unlock { background: var(--green); color: white; }
+  .btn-save { background: #1565c0; color: white; box-shadow: 0 2px 6px rgba(21,101,192,0.3); }
+  .btn-add { background: var(--saffron); color: white; }
+  .btn-outline { background: white; border: 1px solid var(--border); color: var(--dark); }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 12px; }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .stat-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--saffron);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+  .stat-card .label { font-size: 12px; color: #6d4c41; }
+  .stat-card .val { font-size: 18px; font-weight: 700; color: var(--saffron); margin-top: 3px; }
+
+  .controls {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .controls input, .controls select {
+    padding: 9px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .view-toggle {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .view-toggle button { flex: 1; justify-content: center; padding: 9px; }
+  .view-toggle button.active { background: var(--saffron); color: white; border-color: var(--saffron); }
+
+  /* Mobile Card View */
+  .member-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .member-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0e6dc;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+  .member-name { font-weight: 700; font-size: 15px; color: var(--dark); }
+  .member-total {
+    background: var(--saffron-light);
+    color: var(--saffron);
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+  .years-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+    gap: 6px;
+  }
+  .yr-box {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 5px 4px;
+    text-align: center;
+    font-size: 11px;
+    cursor: pointer;
+    background: #fafafa;
+  }
+  .yr-box .yr { font-weight: 700; color: #555; display: block; }
+  .yr-box .amt { font-weight: 600; margin-top: 2px; display: block; }
+  .yr-box.paid { background: #e8f5e9; border-color: #a5d6a7; color: #1b5e20; }
+  .yr-box.due { background: #ffebee; border-color: #ef9a9a; color: #b71c1c; }
+  .yr-box.na { background: #f5f5f5; color: #9e9e9e; }
+
+  /* Table View */
+  .table-wrap {
+    overflow-x: auto;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: none;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { border: 1px solid #e0d6cc; padding: 6px 5px; text-align: center; white-space: nowrap; }
+  th { background: #ef6c00; color: white; position: sticky; top: 0; }
+  td:nth-child(2), th:nth-child(2) {
+    position: sticky;
+    left: 0;
+    background: white;
+    text-align: left;
+    font-weight: 600;
+    z-index: 2;
+  }
+  th:nth-child(2) { background: #ef6c00; z-index: 3; }
+  td.paid { background: #e8f5e9; color: #1b5e20; font-weight: 600; cursor: pointer; }
+  td.due { background: #ffebee; color: #c62828; cursor: pointer; }
+  td.na { color: #aaa; cursor: pointer; }
+
+  /* Modal */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 360px;
+    padding: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  }
+  .modal h3 { margin: 0 0 10px; color: var(--saffron); font-size: 17px; }
+  .quick-btns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .quick-btns button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff8e1;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .modal input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+  .floating-save {
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 150;
+    display: none;
+    gap: 8px;
+    background: white;
+    padding: 8px 14px;
+    border-radius: 30px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    border: 2px solid var(--green);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mantra">!! दिगंबरा दिगंबरा श्रीपाद वल्लभ दिगंबरा !!</div>
+  <h1>श्री दत्तगुरू सेवा मंडळ, धामणपे (रजि.)</h1>
+  <p>ता. राजापूर, जि. रत्नागिरी | वार्षिक सभासद वर्गणी नोंदवही (२०१० - २०२६)</p>
+</header>
+
+<div class="status-bar">
+  <span id="syncStatus" class="sync-badge loading">⏳ Google Sheet शी जोडत आहे...</span>
+  <div style="display:flex; gap:6px;">
+    <button id="authBtn" class="btn btn-lock" onclick="toggleAuth()">🔒 पासवर्ड टाका</button>
+    <button class="btn btn-outline" onclick="loadFromSheet()">🔄 रीफ्रेश</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="summary-grid">
+    <div class="stat-card">
+      <div class="label">एकूण सभासद</div>
+      <div class="val" id="totalMembers">109</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">एकूण जमा वर्गणी</div>
+      <div class="val" id="grandTotal">₹ 7,55,900</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">२०२५ जमा</div>
+      <div class="val" id="total2025">₹ 88,000</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">२०२६ जमा</div>
+      <div class="val" id="total2026">₹ 8,400</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="🔍 सभासदाचे नाव शोधा..." oninput="render()">
+    <select id="yearFilter" onchange="render()">
+      <option value="all">सर्व वर्षे दाखवा</option>
+      <option value="due2026">२०२६ बाकी असलेले</option>
+      <option value="due2025">२०२५ बाकी असलेले</option>
+      <option value="paid2026">२०२६ जमा झालेले</option>
+    </select>
+    <button id="addMemberBtn" class="btn btn-add" style="display:none;" onclick="openAddModal()">➕ नवीन सभासद</button>
+  </div>
+
+  <div class="view-toggle">
+    <button id="btnCardView" class="btn btn-outline active" onclick="setView('card')">📱 मोबाईल कार्ड व्ह्यू</button>
+    <button id="btnTableView" class="btn btn-outline" onclick="setView('table')">📊 संपूर्ण तक्ता (Table)</button>
+  </div>
+
+  <div id="cardContainer"></div>
+
+  <div class="table-wrap" id="tableContainer">
+    <table>
+      <thead id="tableHead"></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="floating-save" id="floatingSave">
+  <button class="btn btn-save" onclick="saveToSheet()">☁️ Google Sheet वर सेव्ह करा</button>
+</div>
+
+<!-- Edit Amount Modal -->
+<div class="modal-backdrop" id="editModal">
+  <div class="modal">
+    <h3 id="modalTitle">वर्गणी अपडेट करा</h3>
+    <p id="modalSub" style="margin:0 0 8px; font-size:13px; color:#555;"></p>
+    <div class="quick-btns">
+      <button onclick="setModalVal(1000)">₹ 1000</button>
+      <button onclick="setModalVal(1200)">₹ 1200</button>
+      <button onclick="setModalVal(1500)">₹ 1500</button>
+      <button onclick="setModalVal(500)">₹ 500</button>
+      <button onclick="setModalVal('')">बाकी (रिकामे)</button>
+      <button onclick="setModalVal('NA')">NA (लागू नाही)</button>
+    </div>
+    <input type="text" id="modalInput" placeholder="रक्कम टाका (उदा. 1000)">
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('editModal')">रद्द करा</button>
+      <button class="btn btn-unlock" onclick="applyEdit()">ओके</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Member Modal -->
+<div class="modal-backdrop" id="addModal">
+  <div class="modal">
+    <h3>➕ नवीन सभासद जोडा</h3>
+    <input type="text" id="newMemberName" placeholder="सभासदाचे पूर्ण नाव (उदा. श्री. राजेंद्र तावडे)">
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('addModal')">रद्द करा</button>
+      <button class="btn btn-add" onclick="addNewMember()">जोडा</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwU7DYmQD8pLeLO0EzxMUB0lIDPzGkmH-Q3B6xSfOE5mzsQV5U61qCOOVJRN039jBR1sg/exec";
+const YEARS = ["2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025","2026"];
+const DEFAULT_DATA = [[1, "श्री दिपक तावडे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [2, "श्री शशांक तावडे", 500, 500, "", 1000, 1500, "", 1000, 1000, 1000, "", "", 1000, "", 1000, 1000, 1000, ""], [3, "श्री विश्वनाथ तावडे", 500, 500, "", 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, "", 1000, ""], [4, "श्री उदय तावडे", 500, "", 500, 1000, 1500, 1000, 1000, 1000, 1000, "", "", "", "", "", "", "", ""], [5, "श्री महेश तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", "", "", "", "", ""], [6, "श्री विक्रम तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [7, "श्री गौरव तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, ""], [8, "श्री राहुल तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", 1000, 1000, 1000, 1000, 1000, 1200], [9, "श्री रोहन तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, "", 1000, 1000, 1000, 1000, 1000, 1200], [10, "श्री सचिन तावडे", "", "", "", "", "", "", "", 1000, "", "", "", "", 1000, 1000, 1000, 1000, 1200], [11, "श्री आशिष तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", 1000, 1000, 1000, ""], [12, "श्री सिद्धेश तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, ""], [13, "श्री मिलिंद तावडे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [14, "श्री महेश मनोहर तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, "", ""], [15, "श्री शुभम तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, ""], [16, "श्री प्रकाश फाटक", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, "", "", "", 1000, 1000, 1000, 1000, ""], [17, "श्री राकेश फाटक", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, "", "", 1000, 1000, 1000, 1000, ""], [18, "श्री शशिकांत तावडे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [19, "श्री तुषार तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, ""], [20, "श्री नंदकिशोर तावडे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [21, "श्री निखिल तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, ""], [22, "श्री नीरज तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, ""], [23, "श्री नरेंद्र तावडे", 500, "", "", 1000, 1500, 1000, 1000, 1000, 1000, 1000, "", 1000, "", 1000, 1000, 1000, ""], [24, "श्री संजय तावडे", 500, "", 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [25, "श्री प्रवीण तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", "", 1000, 1000, 1000, 1000, ""], [26, "श्री प्रणित तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, ""], [27, "श्री उत्तम तावडे", 500, 500, "", 1000, 1500, 1000, 1000, 1000, 1000, "", "", "", "", "", 1000, 1000, ""], [28, "श्री आकाश तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", "", "", "", 1000, 1000, 1000, ""], [29, "श्री शरद तावडे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, "", "", 1000, 1000, 1000, 1000, 1000, 1000, ""], [30, "श्री प्रमोद तावडे", 500, 500, 500, 1000, 1000, 1000, 1000, 1000, 1000, "", "", "", "", "", 1000, 1000, ""], [31, "श्री विलास तावडे", 500, 500, "", 1000, 1500, 1000, 1000, 1000, 1000, 1000, "", 1000, "", "", "", 1000, ""], [32, "श्री सुभाष तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, "", 1000, ""], [33, "श्री सुनील तावडे", 500, 500, "", 1000, 1500, 1000, 1000, "", 1000, 1000, "", "", "", "", "", "", ""], [34, "श्री संतोष तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", "", "", "", "", ""], [35, "कु. विराज तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, ""], [36, "कु. गणेश तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", 1000, ""], [37, "कु. करण तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", 1000, ""], [38, "कु. विकास तावडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, ""], [39, "श्री संतोष कदम", 500, "", "", 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1200], [40, "श्री संदीप कदम", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, 1200], [41, "श्री प्रदीप कदम", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, 1200], [42, "श्री प्रशांत कदम", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", 1000, 1000, 1000, 1000, ""], [43, "श्री निखील कदम", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, 1200], [44, "श्री अनंत गोमणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", 1000, 1000, 1000, 1000, ""], [45, "श्री अक्षय गोमणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", "", "", 1000, "", ""], [46, "श्री आकाश गोमणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, ""], [47, "श्री दीपक गोमणे", "NA", "NA", "NA", "NA", 1500, 1000, 1000, 1000, 1000, 1000, "", "", "", "", 1000, 1000, ""], [48, "श्री विक्रांत तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", "", 1000, "", ""], [49, "श्री किरण तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, ""], [50, "श्री नितीन तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, ""], [51, "श्री विपुल तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, ""], [52, "श्री प्रकाश तानवडे", "", "", "", "", 1500, 1000, 1000, 1000, "", 1000, "", 1000, 1000, 1000, 1000, 1000, ""], [53, "श्री दिवाकर तानवडे", "", "", "", "", "", "", "", 1000, "", 1000, "", 1000, 1000, 1000, 1000, 1000, ""], [54, "श्री विष्णू तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [55, "श्री रवींद्र तानवडे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [56, "श्री विनोद तानवडे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [57, "श्री गणेश तानवडे", "", "", "", "", "", "", "", "", "", "", "", 1000, 1000, 1000, 1000, 1000, ""], [58, "श्री संतोष तानवडे", 500, "", "", 1000, 1500, 1000, 1000, 1000, 1000, 1000, "", 1000, 1000, 1000, 1000, 1000, ""], [59, "श्री संदीप तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", 1000, 1000, 1000, 1000, ""], [60, "श्री सुधिर तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, ""], [61, "श्री दीपक तानवडे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [62, "श्री मंगेश तानवडे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [63, "श्री मनोज तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, ""], [64, "श्री वेदांत तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, ""], [65, "श्री जयवंत तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [66, "श्री विजय तानवडे", 500, 500, "", "", 1500, 1000, 1000, 1000, 1000, 1000, "", "", 1000, 1000, 1000, 1000, ""], [67, "श्री एकनाथ तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", "", "", "", "", ""], [68, "श्री प्रशांत तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", "", "", "", "", ""], [69, "श्री विवेक तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", 1000, "", "", ""], [70, "श्री शशिकांत तानवडे", 500, 500, "", 1000, 1500, 1000, 1000, 1000, "", "", 1000, "", "", "", "", "", ""], [71, "श्री रमाकांत तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", "", 1000, "", ""], [72, "श्री रमेश तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", "", ""], [73, "श्री भावेश तानवडे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, ""], [74, "श्री दीपक राणे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, "", 1000, ""], [75, "श्री तेजस राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, ""], [76, "श्री अक्षय राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", 1000, 1000, 1000, 1000, ""], [77, "श्री आकाश राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", 1000, 1000, 1000, 1000, ""], [78, "श्री सुर्यकांत राणे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, "", "", 1000, "", ""], [79, "श्री राजेश राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", 1000, 1000, 1000, ""], [80, "श्री चेतन राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", 1000, 1000, 1000, ""], [81, "श्री प्रमोद राणे", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, "", "", "", "", 1000, 1000, 1000, ""], [82, "श्री संतोष राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", "", 1000, "", "", ""], [83, "श्री सुशांत राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "", "", 1000, 1000, "", ""], [84, "श्री प्रदीप राणे", 500, 500, "", "", 1500, 1000, 1000, 1000, 1000, "", 1000, 1000, 1000, 1000, 1000, 1000, ""], [85, "श्री अशोक राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, ""], [86, "श्री सुहास राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", 1000, 1000, 1000, ""], [87, "श्री हेमंत राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", 1000, 1000, 1000, ""], [88, "श्री श्रीधर राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, ""], [89, "श्री नीतेश राणे", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, "", ""], [90, "श्री सुधाकर गावखडकर", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, "", 1000, 1000, 1000, 1000, ""], [91, "श्री योगेश गावखडकर", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, ""], [92, "श्री कमलाकर गावखडकर", 500, 500, "", 1000, 1500, "", "", 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [93, "श्री शिवाजी गावखडकर", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [94, "श्री प्रसाद गावखडकर", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, ""], [95, "श्री प्रथमेश गावखडकर", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, ""], [96, "श्री शरद गावखडकर", 500, 500, "", 1000, 1500, 1000, 1000, 1000, 1000, 1000, "", 1000, 1000, 1000, 1000, 1000, ""], [97, "श्री आदित्य गावखडकर", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, ""], [98, "श्री प्रमोद गावखडकर", 500, 500, "", 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [99, "श्री विनोद गावखडकर", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [100, "श्री संतोष गावखडकर", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, ""], [101, "श्री दिपक गिरकर", 500, "", "", 1000, 1500, 1000, 1000, 1000, 1000, "", "", "", "", 1000, "", 1000, ""], [102, "श्री पुरुषोत्तम दळवी", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, 1000, 1000, ""], [103, "श्री मयूर दळवी", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, 1000, 1000, "", 1000, ""], [104, "श्री सचिन दळवी", 500, 500, 500, 1000, 1500, 1000, 1000, "", 1000, 1000, 1000, 1000, "", "", "", 1000, ""], [105, "श्री प्रकाश दळवी", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", "", "", "", ""], [106, "कु. सूरज दळवी", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 1000, "", ""], [107, "श्री दशरथ शेट्ये", 500, 500, 500, 1000, 1500, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, "", "", ""], [108, "श्री गजानन शेट्ये", 500, 500, "", 1000, 1500, 1000, 1000, 1000, 1000, 1000, "", 1000, "", 1000, "", "", ""], [109, "श्री योगेश गोमणे", "", "", "", "", 1000, "", 1000, 1000, "", 1000, "", "", "", 1000, "", 1000, ""]];
+
+let members = JSON.parse(JSON.stringify(DEFAULT_DATA));
+let isUnlocked = false;
+let currentPassword = "";
+let currentView = "card";
+let editTarget = { mIdx: -1, yIdx: -1 };
+let hasUnsavedChanges = false;
+
+function setStatus(text, type) {
+  const el = document.getElementById("syncStatus");
+  el.textContent = text;
+  el.className = "sync-badge " + (type || "");
+}
+
+async function loadFromSheet() {
+  setStatus("⏳ Google Sheet मधून माहिती घेत आहे...", "loading");
+  try {
+    const res = await fetch(SCRIPT_URL);
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 1) {
+      // Skip header row
+      const loaded = [];
+      for (let i = 1; i < data.length; i++) {
+        const row = data[i];
+        if (!row[1]) continue;
+        const cleanRow = [row[0] || i, String(row[1]).trim()];
+        for (let y = 0; y < YEARS.length; y++) {
+          let val = row[y + 2];
+          cleanRow.push(val === undefined || val === null ? "" : val);
+        }
+        loaded.push(cleanRow);
+      }
+      if (loaded.length > 0) {
+        members = loaded;
+        setStatus("✅ Live डेटा अपडेटेड आहे (Google Sheet)", "");
+      } else {
+        setStatus("ℹ️ शीट रिकामी आहे - प्रथम सेव्ह करा", "loading");
+      }
+    } else {
+      setStatus("ℹ️ नवीन शीट तयार आहे - पासवर्ड टाकून सेव्ह करा", "loading");
+    }
+    hasUnsavedChanges = false;
+    updateFloatingSave();
+    render();
+  } catch (err) {
+    console.error(err);
+    setStatus("⚠️ ऑफलाईन डेटा दाखवत आहे (इंटरनेट तपासा)", "error");
+    render();
+  }
+}
+
+async function saveToSheet() {
+  if (!isUnlocked) return alert("कृपया आधी पासवर्ड टाका.");
+  setStatus("☁️ Google Sheet वर सेव्ह होत आहे...", "loading");
+  
+  const header = ["नं.", "वर्गणीदाराचे नाव", ...YEARS, "एकूण जमा"];
+  const rows = [header];
+  members.forEach((m, idx) => {
+    let sum = 0;
+    const yrVals = [];
+    for (let y = 0; y < YEARS.length; y++) {
+      const v = m[y + 2];
+      const num = parseFloat(v);
+      if (!isNaN(num)) sum += num;
+      yrVals.push(v === undefined || v === null ? "" : v);
+    }
+    rows.push([idx + 1, m[1], ...yrVals, sum]);
+  });
+
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ password: currentPassword, rows: rows })
+    });
+    const result = await res.json();
+    if (result.status === "success") {
+      hasUnsavedChanges = false;
+      updateFloatingSave();
+      setStatus("✅ सर्व बदल Google Sheet वर कायमस्वरूपी सेव्ह झाले!", "");
+      alert("✅ यशस्वी! सर्व वर्गणी Google Sheet वर अपडेट झाली आहे.");
+    } else {
+      setStatus("❌ पासवर्ड चुकीचा आहे किंवा त्रुटी आली", "error");
+      alert("❌ सेव्ह झाले नाही: " + (result.message || "Error"));
+    }
+  } catch (err) {
+    console.error(err);
+    setStatus("❌ सर्व्हरशी संपर्क होऊ शकला नाही", "error");
+    alert("❌ इंटरनेट किंवा Google Script URL तपासा.");
+  }
+}
+
+function toggleAuth() {
+  if (isUnlocked) {
+    isUnlocked = false;
+    currentPassword = "";
+    document.getElementById("authBtn").textContent = "🔒 पासवर्ड टाका";
+    document.getElementById("authBtn").className = "btn btn-lock";
+    document.getElementById("addMemberBtn").style.display = "none";
+    updateFloatingSave();
+    render();
+  } else {
+    const pwd = prompt("एडिट करण्यासाठी पासवर्ड टाका (सुरुवातीचा पासवर्ड: 1989):");
+    if (pwd === "1989") {
+      isUnlocked = true;
+      currentPassword = pwd;
+      document.getElementById("authBtn").textContent = "🔓 एडिट मोड सुरू (लॉक करा)";
+      document.getElementById("authBtn").className = "btn btn-unlock";
+      document.getElementById("addMemberBtn").style.display = "inline-flex";
+      updateFloatingSave();
+      render();
+    } else if (pwd !== null) {
+      alert("❌ चुकीचा पासवर्ड!");
+    }
+  }
+}
+
+function updateFloatingSave() {
+  const bar = document.getElementById("floatingSave");
+  bar.style.display = isUnlocked ? "flex" : "none";
+}
+
+function setView(v) {
+  currentView = v;
+  document.getElementById("btnCardView").classList.toggle("active", v === "card");
+  document.getElementById("btnTableView").classList.toggle("active", v === "table");
+  document.getElementById("cardContainer").style.display = v === "card" ? "block" : "none";
+  document.getElementById("tableContainer").style.display = v === "table" ? "block" : "none";
+  render();
+}
+
+function calcStats() {
+  let grand = 0, t25 = 0, t26 = 0;
+  const idx25 = YEARS.indexOf("2025") + 2;
+  const idx26 = YEARS.indexOf("2026") + 2;
+  members.forEach(m => {
+    for (let y = 0; y < YEARS.length; y++) {
+      const n = parseFloat(m[y + 2]);
+      if (!isNaN(n)) grand += n;
+    }
+    const n25 = parseFloat(m[idx25]);
+    if (!isNaN(n25)) t25 += n25;
+    const n26 = parseFloat(m[idx26]);
+    if (!isNaN(n26)) t26 += n26;
+  });
+  document.getElementById("totalMembers").textContent = members.length;
+  document.getElementById("grandTotal").textContent = "₹ " + grand.toLocaleString("en-IN");
+  document.getElementById("total2025").textContent = "₹ " + t25.toLocaleString("en-IN");
+  document.getElementById("total2026").textContent = "₹ " + t26.toLocaleString("en-IN");
+}
+
+function getFilteredMembers() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const f = document.getElementById("yearFilter").value;
+  const idx25 = YEARS.indexOf("2025") + 2;
+  const idx26 = YEARS.indexOf("2026") + 2;
+
+  return members.map((m, idx) => ({ m, idx })).filter(({ m }) => {
+    if (q && !String(m[1]).toLowerCase().includes(q)) return false;
+    if (f === "due2026") return m[idx26] === "" || m[idx26] === null || m[idx26] === undefined;
+    if (f === "due2025") return m[idx25] === "" || m[idx25] === null || m[idx25] === undefined;
+    if (f === "paid2026") return !isNaN(parseFloat(m[idx26]));
+    return true;
+  });
+}
+
+function render() {
+  calcStats();
+  const filtered = getFilteredMembers();
+
+  // Render Card View
+  const cardCont = document.getElementById("cardContainer");
+  cardCont.innerHTML = "";
+  filtered.forEach(({ m, idx }) => {
+    let sum = 0;
+    let yrHtml = "";
+    YEARS.forEach((yr, yIdx) => {
+      const val = m[yIdx + 2];
+      const num = parseFloat(val);
+      let cls = "due", disp = "बाकी";
+      if (!isNaN(num)) {
+        sum += num;
+        cls = "paid";
+        disp = "₹" + num;
+      } else if (String(val).toUpperCase() === "NA") {
+        cls = "na";
+        disp = "NA";
+      }
+      yrHtml += `<div class="yr-box ${cls}" onclick="openEdit(${idx}, ${yIdx})">
+        <span class="yr">${yr}</span>
+        <span class="amt">${disp}</span>
+      </div>`;
+    });
+
+    const card = document.createElement("div");
+    card.className = "member-card";
+    card.innerHTML = `
+      <div class="member-header">
+        <div class="member-name">${idx + 1}. ${m[1]}</div>
+        <div class="member-total">एकूण: ₹ ${sum.toLocaleString("en-IN")}</div>
+      </div>
+      <div class="years-grid">${yrHtml}</div>
+    `;
+    cardCont.appendChild(card);
+  });
+
+  // Render Table View
+  const thead = document.getElementById("tableHead");
+  thead.innerHTML = `<tr><th>नं.</th><th>वर्गणीदाराचे नाव</th>${YEARS.map(y => `<th>${y}</th>`).join("")}<th>एकूण</th></tr>`;
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
+  filtered.forEach(({ m, idx }) => {
+    let sum = 0;
+    let tds = "";
+    YEARS.forEach((yr, yIdx) => {
+      const val = m[yIdx + 2];
+      const num = parseFloat(val);
+      let cls = "due", disp = "-";
+      if (!isNaN(num)) {
+        sum += num;
+        cls = "paid";
+        disp = num;
+      } else if (String(val).toUpperCase() === "NA") {
+        cls = "na";
+        disp = "NA";
+      }
+      tds += `<td class="${cls}" onclick="openEdit(${idx}, ${yIdx})">${disp}</td>`;
+    });
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${idx + 1}</td><td>${m[1]}</td>${tds}<td><b>₹${sum}</b></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function openEdit(mIdx, yIdx) {
+  if (!isUnlocked) {
+    alert("वर्गणी बदलण्यासाठी वरच्या '🔒 पासवर्ड टाका' बटणावर क्लिक करून पासवर्ड (1989) टाका.");
+    return;
+  }
+  editTarget = { mIdx, yIdx };
+  document.getElementById("modalTitle").textContent = members[mIdx][1];
+  document.getElementById("modalSub").textContent = "वर्ष: " + YEARS[yIdx] + " ची वर्गणी निवडा किंवा टाका";
+  document.getElementById("modalInput").value = members[mIdx][yIdx + 2] || "";
+  document.getElementById("editModal").style.display = "flex";
+}
+
+function setModalVal(val) {
+  document.getElementById("modalInput").value = val;
+}
+
+function applyEdit() {
+  const raw = document.getElementById("modalInput").value.trim();
+  const num = parseFloat(raw);
+  let finalVal = "";
+  if (raw.toUpperCase() === "NA") finalVal = "NA";
+  else if (!isNaN(num) && num > 0) finalVal = num;
+  members[editTarget.mIdx][editTarget.yIdx + 2] = finalVal;
+  hasUnsavedChanges = true;
+  closeModal("editModal");
+  render();
+}
+
+function openAddModal() {
+  document.getElementById("newMemberName").value = "";
+  document.getElementById("addModal").style.display = "flex";
+}
+
+function addNewMember() {
+  const name = document.getElementById("newMemberName").value.trim();
+  if (!name) return alert("कृपया सभासदाचे नाव टाका.");
+  const newRow = [members.length + 1, name, ...YEARS.map(() => "")];
+  members.push(newRow);
+  hasUnsavedChanges = true;
+  closeModal("addModal");
+  render();
+}
+
+function closeModal(id) {
+  document.getElementById(id).style.display = "none";
+}
+
+window.onload = loadFromSheet;
+</script>
+</body>
+</html>
